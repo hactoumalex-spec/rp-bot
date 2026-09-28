@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rugpull Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        form { margin-bottom: 20px; }
+        label, input, button { display: block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Create a Coin and Rugpull</h1>
+    <form id="createCoinForm">
+        <label for="coinName">Coin Name:</label>
+        <input type="text" id="coinName" name="coinName" required>
+        <label for="initialSupply">Initial Supply:</label>
+        <input type="number" id="initialSupply" name="initialSupply" required>
+        <label for="walletAddress">Wallet Address:</label>
+        <input type="text" id="walletAddress" name="walletAddress" required>
+        <button type="submit">Create Coin</button>
+    </form>
+
+    <form id="rugpullForm">
+        <label for="coinNameRugpull">Coin Name:</label>
+        <input type="text" id="coinNameRugpull" name="coinNameRugpull" required>
+        <label for="walletAddressRugpull">Wallet Address:</label>
+        <input type="text" id="walletAddressRugpull" name="walletAddressRugpull" required>
+        <button type="submit">Rugpull</button>
+    </form>
+
+    <script>
+        // In-memory storage for coins and wallets
+        const coins = {};
+        const wallets = {};
+
+        // Fake trade function
+        function fakeTrade(coinName, walletAddress, duration = 60) {
+            for (let i = 0; i < duration; i++) {
+                const tradeAmount = Math.random() * 1.0;
+                wallets[walletAddress].balance += tradeAmount;
+                console.log(`Fake trade: ${tradeAmount} ${coinName} to ${walletAddress}`);
+                setTimeout(() => {}, 1000);
+            }
+        }
+
+        // Rugpull function
+        function rugpull(coinName, walletAddress) {
+            if (coins[coinName]) {
+                coins[coinName].supply = 0;
+                wallets[walletAddress].balance += coins[coinName].supply;
+                console.log(`Rugpull successful: ${coinName} to ${walletAddress}`);
+            } else {
+                console.log(`Coin not found: ${coinName}`);
+            }
+        }
+
+        document.getElementById('createCoinForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const coinName = document.getElementById('coinName').value;
+            const initialSupply = document.getElementById('initialSupply').value;
+            const walletAddress = document.getElementById('walletAddress').value;
+
+            coins[coinName] = { supply: initialSupply, wallet: walletAddress };
+            wallets[walletAddress] = { balance: initialSupply };
+
+            // Start fake trading
+            fakeTrade(coinName, walletAddress);
+
+            alert('Coin created successfully');
+        });
+
+        document.getElementById('rugpullForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const coinName = document.getElementById('coinNameRugpull').value;
+            const walletAddress = document.getElementById('walletAddressRugpull').value;
+
+            rugpull(coinName, walletAddress);
+
+            alert('Rugpull successful');
+        });
+    </script>
+</body>
+</html>
